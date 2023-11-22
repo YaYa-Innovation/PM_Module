@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Initially hide the divs */
+    .myDiv {
+      display: none;
+      padding: 20px;
+      background-color: #f0f0f0;
+      margin-top: 10px;
+    }
+
+    /* Style the button */
+    #toggleButton {
+      padding: 10px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Button to toggle the divs -->
+  <button id="toggleButton" onclick="toggleDiv('div1')">Toggle Div 1</button><br>
+    <div id="div1" class="myDiv">
+    This is the content of Div 1.
+  </div>
+  <button id="toggleButton" onclick="toggleDiv('div2')">Toggle Div 2</button><br>
+    <div id="div2" class="myDiv">
+    This is the content of Div 2.
+  </div>
+  <button id="toggleButton" onclick="toggleDiv('div3')">Toggle Div 3</button><br>
+    <div id="div3" class="myDiv">
+    This is the content of Div 3.
+  </div>
+
+
+
+  <script>
+    function toggleDiv(divId) {
+      var myDiv = document.getElementById(divId);
+
+      // Toggle the display property of the div
+      if (myDiv.style.display === 'none' || myDiv.style.display === '') {
+        myDiv.style.display = 'block';
+      } else {
+        myDiv.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>

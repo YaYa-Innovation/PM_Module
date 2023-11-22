@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form for {{ column_name }} in {{ sheet_name }} - {{ filename }}</title>
+</head>
+<body>
+    <h1>Form for {{ column_name }} in {{ sheet_name }} - {{ filename }}</h1>
+    
+    <form method="post">
+        {% for _ in range(4) %}
+            <label for="{{ column_name }}">Enter data for {{ column_name }}:</label>
+            <input type="text" id="{{ column_name }}" name="{{ column_name }}"><br>
+        {% endfor %}
+        
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

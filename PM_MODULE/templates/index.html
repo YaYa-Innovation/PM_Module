@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel Files</title>
+    <style>
+        .file-container {
+            margin: 20px;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Excel Files in Directory</h1>
+    
+    {% for file in files %}
+        <div class="file-container">
+            <a href="{{ url_for('list_sheets', filename=file) }}" class="button">{{ file }}</a>
+        </div>
+    {% endfor %}
+</body>
+</html>
