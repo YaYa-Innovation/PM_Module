@@ -1,0 +1,33 @@
+<!-- task_status.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Task Status</title>
+</head>
+<body>
+    <h2>Task Status</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Spare Name</th>
+                <th>Spare ID</th>
+                <th>Quantity</th>
+                <th>Booking</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in task_data %}
+                <tr>
+                    <td>{{ task['spare_name'] }}</td>
+                    <td>{{ task['spare_id'] }}</td>
+                    <td>{{ task['qty'] }}</td>
+                    <td>{{ task['booking'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

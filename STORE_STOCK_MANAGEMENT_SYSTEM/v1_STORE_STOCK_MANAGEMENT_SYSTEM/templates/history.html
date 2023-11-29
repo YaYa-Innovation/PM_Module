@@ -1,0 +1,57 @@
+<!-- history.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>History</title>
+</head>
+<body>
+    <h2>History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Spare Name</th>
+                <th>Spare ID</th>
+                <th>Qty Requested</th>
+                <!-- <th>Booking</th>Add a new column for Booking --> -->
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in history_data %}
+                <tr>
+                    <td>{{ row['timestamp'] }}</td>
+                    <td>{{ row['spare_name'] }}</td>
+                    <td>{{ row['spare_id'] }}</td>
+                    <td>{{ row['qty_requested'] }}</td>
+                    <!-- <td>{{ row['booking'] }}</td>  -->
+                    <td>{{ row['purpose'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        {% for record in history_data %}
+            // Calculate the actual quantity for spare with ID {{ record['spare_id'] }}
+            var initialQuantity{{ record['spare_id'] }} = 0;
+            var totalBooking{{ record['spare_id'] }} = 0;
+
+            {% for task in task_data %}
+                if ({{ task['spare_id'] }} === {{ record['spare_id'] }}) {
+                    initialQuantity{{ record['spare_id'] }} = {{ task['qty'] }};
+                    totalBooking{{ record['spare_id'] }} = {{ task['booking'] }};
+                    break;
+                }
+            {% endfor %}
+
+            // Display the actual quantity in the corresponding table cell
+            $('#quantity{{ record['spare_id'] }}').text(initialQuantity{{ record['spare_id'] }} + totalBooking{{ record['spare_id'] }});
+        {% endfor %}
+    </script>
+</body>
+</html>

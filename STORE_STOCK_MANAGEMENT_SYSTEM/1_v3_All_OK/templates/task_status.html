@@ -1,0 +1,62 @@
+<!-- task_status.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Task Status</title>
+</head>
+<body>
+    <h2>Task Status</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Spare Name</th>
+                <th>Spare ID</th>
+                <th>Quantity</th>
+                <th>Booking</th>
+                <th>Action</th> <!-- Add a new column for the "Complete" button -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in task_data %}
+                <tr id="taskRow{{ task['spare_id'] }}">
+                    <td>{{ task['spare_name'] }}</td>
+                    <td>{{ task['spare_id'] }}</td>
+                    <td>{{ task['qty'] }}</td>
+                    <td>{{ task['booking'] }}</td>
+                    <td><button onclick="completeTask('{{ task['spare_name'] }}', {{ task['spare_id'] }}, {{ task['booking'] }})">Complete</button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function completeTask(spareName, spareId, booking) {
+            // Make an AJAX request to the server to complete the task
+            $.ajax({
+                type: "POST",
+                url: "/complete_task/" + spareId,
+                data: { booking: booking },  // Send the booking value to the server
+                success: function(response) {
+                    alert(`Task for ${spareName} (ID: ${spareId}) marked as complete.`);
+                    // Update the quantity and booking displayed in the table
+                    $('#taskRow' + spareId + ' td:nth-child(3)').text(response.updatedQuantity);
+                    $('#taskRow' + spareId + ' td:nth-child(4)').text(response.updatedBooking);
+                    
+                    // Hide the completed task row if necessary (booking becomes 0)
+                    if (response.updatedBooking === 0) {
+                        $('#taskRow' + spareId).hide();
+                    }
+                },
+                error: function(error) {
+                    console.error("Error completing task:", error);
+                    alert("Error completing task. Please try again.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

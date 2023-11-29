@@ -1,0 +1,75 @@
+<!-- create_spare.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Create New Spare - Store Stock Management System</title>
+</head>
+<body>
+
+    <h2>Create New Spare</h2>
+
+    <form action="{{ url_for('create_spare') }}" method="POST" id="createSpareForm">
+        <label for="spare">Spare Name:</label>
+        <input type="text" name="spare" id="spare" required><br>
+        
+        <label for="id">Spare ID:</label>
+        <input type="number" name="id" id="id" required oninput="checkSpareId()"><br>
+        
+        <label for="qty">Initial Quantity:</label>
+        <input type="number" name="qty" id="qty" required><br>
+        
+        <label for="purpose">Purpose:</label>
+        <input type="text" name="purpose" id="purpose" required><br>
+        
+        <button type="submit">Create Spare</button>
+    </form>
+
+    <p id="existingSpareInfo"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        function checkSpareId() {
+            var spareId = $('#id').val();
+
+            // Make an AJAX request to check if spare ID exists
+            $.ajax({
+                type: "GET",
+                url: "/check_spare_id/" + spareId,
+                success: function(response) {
+                    if (response && response.spareExists) {
+                        // If spare ID exists, update the form fields
+                        $('#spare').val(response.spareName);
+                        // You can update other fields if needed
+                        $('#existingSpareInfo').text(`Spare ID ${spareId} already exists. Spare Name: ${response.spareName}`);
+                    } else {
+                        // If spare ID doesn't exist, clear the info and form fields
+                        $('#spare').val('');
+                        $('#existingSpareInfo').text('');
+                    }
+                },
+                error: function(error) {
+                    console.error("Error checking spare ID:", error);
+                }
+            });
+
+            // Make an additional AJAX request to fetch spare name based on spare ID
+            $.ajax({
+                type: "GET",
+                url: "/get_spare_name/" + spareId,
+                success: function(response) {
+                    if (response && response.spareName) {
+                        // If spare name is available, update the "Spare Name" field
+                        $('#spare').val(response.spareName);
+                    }
+                },
+                error: function(error) {
+                    console.error("Error fetching spare name:", error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!-- create_spare.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Create New Spare - Store Stock Management System</title>
+</head>
+<body>
+
+    <h2>Create New Spare</h2>
+
+    <form action="{{ url_for('create_spare') }}" method="POST">
+        <label for="spare">Spare Name:</label>
+        <input type="text" name="spare" required><br>
+        
+        <label for="id">Spare ID:</label>
+        <input type="number" name="id" required><br>
+        
+        <label for="qty">Initial Quantity:</label>
+        <input type="number" name="qty" required><br>
+        
+        <label for="purpose">Purpose:</label>
+        <input type="text" name="purpose" required><br>
+        
+        <button type="submit">Create Spare</button>
+    </form>
+
+    <!-- ... Other content ... -->
+
+</body>
+</html>

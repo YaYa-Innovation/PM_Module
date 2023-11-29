@@ -1,0 +1,35 @@
+<!-- history.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>History</title>
+</head>
+<body>
+    <h2>History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Spare Name</th>
+                <th>Spare ID</th>
+                <th>Quantity Requested</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in history_data %}
+                <tr>
+                    <td>{{ record['timestamp'] }}</td>
+                    <td>{{ record['spare_name'] }}</td>
+                    <td>{{ record['spare_id'] }}</td>
+                    <td>{{ record['qty_requested'] }}</td>
+                    <td>{{ record['purpose'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

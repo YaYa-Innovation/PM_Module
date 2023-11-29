@@ -1,0 +1,106 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Store Stock Management System</title>
+</head>
+<body>
+    <h1>Store Stock Management System</h1>
+
+    <div>
+        <a href="{{ url_for('all_stock') }}" class="button">All Stock</a>
+        <a href="{{ url_for('add_task') }}" class="button">Add Task</a>
+        <a href="{{ url_for('task_status') }}" class="button">Task Status</a>
+        <a href="{{ url_for('history') }}" class="button">History</a>
+        <a href="{{ url_for('create_spare') }}" class="button">Create New Spare</a>
+
+    </div>
+
+    <!-- All Stock Table -->
+    <div id="allStock" style="display: none;">
+    <h2>All Stock</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Spare Name</th>
+                <th>Spare ID</th>
+                <th>Quantity</th>
+                <th>Booking</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stock_data %}
+                <tr>
+                    <td>{{ stock['spare_name'] }}</td>
+                    <td>{{ stock['spare_id'] }}</td>
+                    <td>{{ stock['qty'] }}</td>
+                    <td>{{ stock['booking'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+    <!-- Add Task Form -->
+    <div id="addTaskForm" style="display: none;">
+        <h2>Add Task</h2>
+        <form action="{{ url_for('add_task') }}" method="POST">
+            <label for="spare">Spare Name:</label>
+            <input type="text" name="spare" required><br>
+            <label for="id">Spare ID:</label>
+            <input type="number" name="id" required><br>
+            <label for="qty">Quantity:</label>
+            <input type="number" name="qty" required><br>
+            <label for="purpose">Purpose:</label>
+            <input type="text" name="purpose" required><br>
+            <button type="submit">Submit</button>
+        </form>
+        {% if adjustment_msg %}
+            <p>{{ adjustment_msg }}</p>
+        {% endif %}
+    </div>
+
+    <!-- Task Status Table -->
+    <div id="taskStatus" style="display: none;">
+        <h2>Task Status</h2>
+        <!-- Your task status table code here -->
+    </div>
+
+    <!-- History Table -->
+    <div id="history" style="display: none;">
+        <h2>History</h2>
+        <!-- Your history table code here -->
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("allStockButton").addEventListener("click", function() {
+                toggleVisibility("allStock");
+            });
+
+            document.getElementById("addTaskButton").addEventListener("click", function() {
+                toggleVisibility("addTaskForm");
+            });
+
+            document.getElementById("taskStatusButton").addEventListener("click", function() {
+                toggleVisibility("taskStatus");
+            });
+
+            document.getElementById("historyButton").addEventListener("click", function() {
+                toggleVisibility("history");
+            });
+
+            function toggleVisibility(elementId) {
+                var elements = ["allStock", "addTaskForm", "taskStatus", "history"];
+                elements.forEach(function(el) {
+                    document.getElementById(el).style.display = el === elementId ? "block" : "none";
+                });
+            }
+        });
+    </script>
+</body>
+</html>
