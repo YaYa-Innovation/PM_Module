@@ -1,0 +1,186 @@
+<!-- templates/sheets_viewer.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheets Viewer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+   <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #sheetsViewer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #addSheetForm {
+            margin-top: 20px;
+        }
+
+        #addSheetForm h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #addSheetForm label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #addSheetForm input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        #addSheetForm button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #addSheetForm button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList {
+            margin-top: 20px;
+        }
+
+        #sheetsList h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #sheetsList button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #sheetsList button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="sheetsViewer">
+        <h1>Sheets Viewer - {{ file_name }}</h1>
+        <button onclick="addSheet('{{ file_name }}')">Add Sheet</button>
+
+        <div id="addSheetForm" style="display: none;">
+            <h2>Add New Sheet</h2>
+            <form onsubmit="addNewSheet('{{ file_name }}'); return false;">
+                <label for="newSheetName">Enter Sheet Name:</label>
+                <input type="text" id="newSheetName" name="newSheetName" required>
+                <br>
+                <button type="submit">Add Sheet</button>
+            </form>
+        </div>
+
+    <div id="sheetsList">
+        <h2>Sheets</h2>
+        {% if sheets %}
+            {% for sheet_name in sheets %}
+                <a href="{{ url_for('view_sheet_data', file_name=file_name, sheet_name=sheet_name) }}">
+                    <button>{{ sheet_name }}</button>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>No sheets found.</p>
+        {% endif %}
+    </div>
+    </div>
+
+    <script>
+        function addSheet(file_name) {
+            document.getElementById('addSheetForm').style.display = 'block';
+        }
+
+        function addNewSheet(file_name) {
+            const newSheetName = document.getElementById('newSheetName').value;
+
+            fetch(`/add_sheet/${file_name}/${newSheetName}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(`Failed to add sheet. ${data.message}`);
+                }
+            });
+        }
+
+        function openSheet(file_name, sheet_name) {
+            // You can implement logic to open the selected sheet
+            alert(`Open sheet: ${sheet_name} from file: ${file_name}`);
+        }
+    </script>
+</body>
+</html>

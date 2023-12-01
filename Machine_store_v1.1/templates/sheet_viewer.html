@@ -1,0 +1,40 @@
+<!-- templates/sheet_viewer.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... (existing head content) ... -->
+</head>
+<body>
+    <div id="sheetsViewer">
+        <h1>Sheet Viewer - {{ file_name }} - {{ sheet_name }}</h1>
+
+        <!-- Add Task and Task Status buttons -->
+        <button onclick="addTask('{{ file_name }}', '{{ sheet_name }}')">Add Task</button>
+        <button onclick="taskStatus('{{ file_name }}', '{{ sheet_name }}')">Task Status</button>
+
+        <!-- Display sheet data here -->
+        {% if headers and data %}
+            <table>
+                <!-- ... (existing table content) ... -->
+            </table>
+        {% else %}
+            <p>No data found for the selected sheet.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function addTask(file_name, sheet_name) {
+            // Implement logic to handle the "Add Task" button click
+            // Redirect or show a modal for adding tasks
+            alert('Add Task button clicked!');
+        }
+
+        function taskStatus(file_name, sheet_name) {
+            // Implement logic to handle the "Task Status" button click
+            // Redirect or show a modal for viewing task status
+            alert('Task Status button clicked!');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #sheetsViewer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #addSheetForm {
+            margin-top: 20px;
+        }
+
+        #addSheetForm h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #addSheetForm label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #addSheetForm input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        #addSheetForm button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #addSheetForm button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList {
+            margin-top: 20px;
+        }
+
+        #sheetsList h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #sheetsList button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #sheetsList button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="sheetsViewer">
+        <h1>Sheet Data Viewer - {{ file_name }} - {{ sheet_name }}</h1>
+<!-- Add this form inside your sheet_data_viewer.html template -->
+
+<button onclick="toggleAddTaskForm()">Add Task</button>
+<div id="addTaskForm" style="margin-top: 20px;">
+    <h2>Add Task</h2>
+    <form action="{{ url_for('add_data', file_name=file_name, sheet_name=sheet_name) }}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="age">Age:</label>
+        <input type="text" id="age" name="age" required>
+        <br>
+        <button type="submit">Add Task</button>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</div>
+<script>
+    function toggleAddTaskForm() {
+        var form = document.getElementById('addTaskForm');
+        form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+    }
+</script>
+        <!-- Display sheet data here -->
+        {% if headers and data %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for header in headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            {% for key, value in row.items() %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No data found for the selected sheet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
