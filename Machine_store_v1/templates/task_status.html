@@ -1,0 +1,121 @@
+<!-- task_status.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content here -->
+</head>
+<body>
+    <h1>Task Status for {{ file_name }} - {{ sheet_name }}</h1>
+
+    <!-- Display task status here -->
+    {% if task_status %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Machine Part</th>
+                    <th>Category</th>
+                    <!-- Add other columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in task_status %}
+                    <tr>
+                        <td>{{ task.machine_part }}</td>
+                        <td>{{ task.category }}</td>
+                        <!-- Add other columns as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No task status found.</p>
+    {% endif %}
+</body>
+</html>
+
+
+
+
+
+
+<!-- templates/add_data_form.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Data</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Add Data to {{ sheet_name }} - {{ file_name }}</h1>
+        <form method="post" action="{{ url_for('add_data', file_name=file_name, sheet_name=sheet_name) }}">
+            <!-- Add your form fields here -->
+            <button type="submit" class="btn btn-primary">Add Data</button>
+        </form>
+    </div>
+</body>
+</html>
+
+
+<!-- templates/sheet_viewer.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Viewer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ sheet_name }} - {{ file_name }}</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    {% for header in headers %}
+                        <th>{{ header }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                    <tr>
+                        {% for header in headers %}
+                            <td>{{ row[header] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+
+<!-- templates/sheets_viewer.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Viewer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sheets Viewer - {{ file_name }}</h1>
+        <ul>
+            {% for sheet_name in sheets %}
+                <li><a href="{{ url_for('open_sheet', file_name=file_name, sheet_name=sheet_name) }}">{{ sheet_name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+
+

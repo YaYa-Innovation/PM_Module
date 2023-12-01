@@ -1,0 +1,160 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #addAreaForm {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #successMessage {
+            color: green;
+            margin-top: 10px;
+        }
+
+        #excelFiles {
+            margin-top: 20px;
+        }
+
+        #excelFiles h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #excelFiles button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #excelFiles button:hover {
+            background-color: #45a049;
+        }
+
+        #excelFiles p {
+            margin-top: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="addAreaForm">
+        <h1>Welcome to Stock Management System</h1>
+        <button onclick="toggleForm()">Add Area</button>
+
+        <form id="areaForm" style="display: none;" onsubmit="createExcel(); return false;">
+            <label for="area_name">Enter Area Name:</label>
+            <input type="text" id="area_name" name="area_name" required>
+            <br>
+            <button type="submit">Create Excel File</button>
+        </form>
+
+        <div id="successMessage">
+            {% if message %}
+                {{ message }}
+            {% endif %}
+        </div>
+<div id="excelFiles">
+    <h2>Excel Files</h2>
+    {% if excel_files %}
+        {% for file_name in excel_files %}
+            {% set file_name_without_extension = file_name.rsplit('.', 1)[0] %}
+            <button onclick="openExcel('{{ file_name }}')">{{ file_name_without_extension }}</button>
+        {% endfor %}
+    {% else %}
+        <p>No Excel files found.</p>
+    {% endif %}
+</div>
+    </div>
+
+
+    <script>
+        function toggleForm() {
+            console.log('toggleForm() called');
+            const areaForm = document.getElementById('areaForm');
+            areaForm.style.display = areaForm.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('successMessage').innerText = '';  // Clear success message
+        }
+
+        function createExcel() {
+            const areaName = document.getElementById('area_name').value;
+
+            fetch('/add_area', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `area_name=${areaName}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);  // Show success message in alert
+                    // Clear the form
+                    document.getElementById('areaForm').reset();
+                    // Hide the form
+                    toggleForm();
+                    // Refresh the page to update the list of Excel files
+                    window.location.reload();
+                } else {
+                    alert(`Failed to create Excel file. ${data.message}`);
+                }
+            });
+        }
+
+function openExcel(file_name) {
+        window.location.href = '/open_excel/' + file_name;
+    }
+    </script>
+</body>
+</html>

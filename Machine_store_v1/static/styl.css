@@ -1,0 +1,18 @@
+/* static/style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+form {
+    margin-top: 20px;
+}
+
+/* Add additional styles as needed */
+
+excellent, now first to sheet without all sheets i click sheet name with open there i want add task button and task status button 
+add task button to ask form the form inside 
+1.machine part with select options 2.catagory with select options i)electrical ii)mechanical 3.spare ID 4.qty 5.Frequency in days 6.time required in hrs 7.man power requirement  9.cost 10.spare changed date
+these all input i need
+ task status button to show task data's and complete button with each row

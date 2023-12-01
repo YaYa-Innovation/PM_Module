@@ -1,0 +1,30 @@
+<!-- tasks.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content here -->
+</head>
+<body>
+    <h1>Tasks for {{ file_name }} - {{ sheet_name }}</h1>
+
+    <!-- Task form here -->
+    <form method="post" action="/add_task/{{ file_name }}/{{ sheet_name }}">
+        <!-- Form fields for task creation -->
+        <!-- ... -->
+
+        <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Display existing tasks here -->
+    {% if tasks %}
+        <h2>Existing Tasks:</h2>
+        <ul>
+            {% for task in tasks %}
+                <li>{{ task }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tasks found.</p>
+    {% endif %}
+</body>
+</html>
