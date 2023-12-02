@@ -1,0 +1,37 @@
+<!-- templates/task_status.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Head content here -->
+</head>
+<body>
+    <h1>Task Status for {{ file_name }} - {{ sheet_name }}</h1>
+
+    <!-- Display task status here -->
+    {% if task_status %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Machine Part</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <!-- Add other columns as needed -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in task_status %}
+                    <tr>
+                        <td>{{ task.machine_part }}</td>
+                        <td>{{ task.category }}</td>
+                        <td>{{ task.status }}</td>
+                        <!-- Add other columns as needed -->
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No task status found.</p>
+    {% endif %}
+</body>
+</html>
