@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #sheetsViewer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #addSpareModal, #addSheetModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 1000;
+        }
+
+            .modal-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        z-index: 1000;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #ccc;
+        padding: 5px;
+        border: none;
+        cursor: pointer;
+    }
+
+        .modal-title {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .modal-label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .modal-button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .modal-button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList {
+            margin-top: 20px;
+        }
+
+        #sheetsList h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #sheetsList button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #sheetsList button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div id="sheetsViewer">
+    <h1>Sheet Data Viewer - {{ file_name }}</h1>
+
+    <!-- Button to toggle the Add Spare modal -->
+    <button onclick="toggleAddModal('Spare')">Add Spare</button>
+    <!-- Button to add a new sheet -->
+    <button onclick="toggleAddModal('Sheet')">Add Sheet</button>
+
+    <!-- Add Spare modal -->
+<div id="addSpareModal">
+    <h2 class="modal-title">Add Spare</h2>
+    <form action="{{ url_for('add_spare', file_name=file_name) }}" method="post">
+        <label class="modal-label" for="spare_name">Spare Name:</label>
+        <input class="modal-input" type="text" id="spare_name" name="spare_name" required>
+        <br>
+        <label class="modal-label" for="spare_id">Spare ID:</label>
+        <input class="modal-input" type="text" id="spare_id" name="spare_id" required>
+        <br>
+        <label class="modal-label" for="qty">Quantity:</label>
+        <input class="modal-input" type="number" id="qty" name="qty" required>
+        <br>
+        <!-- Add this new input field for 'purpose' -->
+        <label class="modal-label" for="purpose">Purpose:</label>
+        <input class="modal-input" type="text" id="purpose" name="purpose" required>
+        <br>
+        <button class="modal-button" type="submit">Add Spare</button>
+    </form>
+</div>
+
+    <!-- Add Sheet modal -->
+    <div id="addSheetModal">
+        <h2 class="modal-title">Add Sheet</h2>
+        <form action="{{ url_for('add_sheet_route', file_name=file_name) }}" method="post">
+            <label class="modal-label" for="sheet_name">Sheet Name:</label>
+            <input class="modal-input" type="text" id="sheet_name" name="sheet_name" required>
+            <br>
+            <button class="modal-button" type="submit">Add Sheet</button>
+        </form>
+    </div>
+
+    <!-- Display sheet data here -->
+    {% if sheets %}
+        <div id="sheetsList">
+            <h2>Sheets</h2>
+            {% for sheet in sheets %}
+                <button onclick="location.href='{{ url_for('view_sheet_data', file_name=file_name, sheet_name=sheet) }}'">{{ sheet }}</button>
+            {% endfor %}
+            <p>Note: 'All Stock' and 'History' sheets are displayed without buttons.</p>
+        </div>
+    {% else %}
+        <p>No sheets found for the selected file.</p>
+    {% endif %}
+</div>
+
+<script>
+    function toggleAddModal(type) {
+        const addSpareModal = document.getElementById('addSpareModal');
+        const addSheetModal = document.getElementById('addSheetModal');
+
+        if (type === 'Spare') {
+            addSpareModal.style.display = addSpareModal.style.display === 'none' ? 'block' : 'none';
+        } else if (type === 'Sheet') {
+            addSheetModal.style.display = addSheetModal.style.display === 'none' ? 'block' : 'none';
+        }
+    }
+</script>
+
+
+</body>
+</html>
