@@ -1,0 +1,31 @@
+<!-- ... (existing content) ... -->
+
+<div id="sheetsViewer">
+    <h1>Sheet Viewer - {{ file_name }} - {{ sheet_name }}</h1>
+
+    <!-- Only show "Add Task" button for sheets other than 'All Stock' and 'History' -->
+    {% if sheet_name not in ['All Stock', 'History'] %}
+        <button onclick="addTask('{{ file_name }}', '{{ sheet_name }}')">Add Task</button>
+    {% endif %}
+
+    <!-- Display sheet data here -->
+    {% if headers and data %}
+        <table>
+            <!-- ... (existing table content) ... -->
+        </table>
+    {% else %}
+        <p>No data found for the selected sheet.</p>
+    {% endif %}
+</div>
+
+<script>
+    function addTask(file_name, sheet_name) {
+        // Implement logic to handle the "Add Task" button click
+        // Redirect or show a modal for adding tasks
+        alert('Add Task button clicked!');
+    }
+
+    // ... (existing script content) ...
+</script>
+
+<!-- ... (existing content) ... -->

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Excel App - Sheets</title>
+</head>
+<body>
+    <h1>Sheets in {{ file_name }}</h1>
+    <ul>
+        {% for sheet in sheets %}
+            <li><a href="{{ url_for('show_sheet', file_name=file_name, sheet_name=sheet) }}">{{ sheet }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('create_sheet', file_name=file_name) }}">Create New Sheet</a>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <h1>Add Task - {{ file_name }} - {{ sheet_name }}</h1>
+
+    <!-- Task form here -->
+    <form id="addTaskForm" method="post" action="/add_task">
+        <label for="machine_number">Machine Number:</label>
+        <input type="text" id="machine_number" name="machine_number" required>
+        <br>
+
+        <label for="machine_name">Machine Name:</label>
+        <input type="text" id="machine_name" name="machine_name" required>
+        <br>
+
+        <label for="machine_part">Machine Part:</label>
+        <input type="text" id="machine_part" name="machine_part" required>
+        <br>
+
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+            <option value="electrical">Electrical</option>
+            <option value="mechanical">Mechanical</option>
+        </select>
+        <br>
+
+        <label for="spare_id">Spare ID:</label>
+        <input type="text" id="spare_id" name="spare_id" required>
+        <br>
+
+        <button type="submit" id="submitBtn">Add Task</button>
+    </form>
+
+
+</body>
+</html>
