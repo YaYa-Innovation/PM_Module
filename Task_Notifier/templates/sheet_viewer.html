@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheet Viewer</title>
+    <!-- Add any additional styling or scripts you may need -->
+</head>
+<body>
+    <h1>Sheet Viewer</h1>
+    <h2>File: {{ filename }}</h2>
+    <h3>Sheet: {{ sheet_name }}</h3>
+
+    <!-- Display sheet data (modify based on your needs) -->
+    <table border="1">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Add any additional content as needed -->
+
+</body>
+</html>

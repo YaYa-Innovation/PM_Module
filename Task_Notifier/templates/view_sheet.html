@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Sheet</title>
+    <style>
+        /* Your existing styles go here */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .complete-button {
+            background-color: #2ecc71;
+            color: #fff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .complete-button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Additional styles for the Create Task form */
+        #create-task-form {
+            display: none;
+            margin-top: 20px;
+            width: 60%;
+            margin: auto;
+            max-height: 80vh; /* Set a maximum height for the form container */
+            overflow-y: auto; /* Enable vertical scrolling if needed */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-container input {
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-container button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .form-container button.cancel-button {
+            background-color: #e74c3c;
+            margin-left: 10px;
+        }
+
+        .form-container button.cancel-button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+
+
+</head>
+<body>
+    <h1>Sheet Viewer</h1>
+    <h2>File: {{ filename }}</h2>
+    <h3>Sheet: {{ sheet_name }}</h3>
+
+    <!-- Display sheet data -->
+    <table border="1">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    {% for cell in row %}
+                        <td>{{ cell }}</td>
+                    {% endfor %}
+                    <td>
+                        <button class="complete-button" onclick="completeRow({{ loop.index }})">Complete</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Create Task button -->
+    <button onclick="showCreateTaskForm()">Create Task</button>
+
+    <!-- Create Task form -->
+    <div id="create-task-form" class="form-container">
+        <h2>Create New Task</h2>
+        <form action="{{ url_for('create_task', filename=filename, sheet_name=sheet_name) }}" method="post">
+            <!-- Input fields for task details -->
+        <label for="task_machine_no">Machine No:</label>
+        <input type="text" id="task_machine_no" name="task_machine_no" required>
+
+        <label for="task_machine_name">Machine Name:</label>
+        <input type="text" id="task_machine_name" name="task_machine_name" required>
+
+        <label for="task_machine_part">Machine Part:</label>
+        <input type="text" id="task_machine_part" name="task_machine_part" required>
+
+        <label for="task_job_number">Job Number:</label>
+        <input type="text" id="task_job_number" name="task_job_number" required>
+
+        <label for="task_spare_id">Spare ID:</label>
+        <input type="text" id="task_spare_id" name="task_spare_id" required>
+
+        <label for="task_spare_name">Spare Name:</label>
+        <input type="text" id="task_spare_name" name="task_spare_name" required>
+
+        <label for="task_qty">Quantity:</label>
+        <input type="text" id="task_qty" name="task_qty" required>
+
+        <label for="task_frequency">Frequency in Days:</label>
+        <input type="text" id="task_frequency" name="task_frequency" required>
+
+        <label for="task_time_required">Time Required in Hours:</label>
+        <input type="text" id="task_time_required" name="task_time_required" required>
+
+        <label for="task_manpower">Manpower Requirement:</label>
+        <input type="text" id="task_manpower" name="task_manpower" required>
+
+        <label for="task_cost">Cost:</label>
+        <input type="text" id="task_cost" name="task_cost" required>
+
+        <label for="task_total_cost">Total Cost:</label>
+        <input type="text" id="task_total_cost" name="task_total_cost" required>
+
+        <label for="task_last_changed_date">Last Changed Date:</label>
+        <input type="text" id="task_last_changed_date" name="task_last_changed_date" required>
+
+        <label for="task_due_date">Due Date:</label>
+        <input type="text" id="task_due_date" name="task_due_date" required>
+
+        <!-- Repeat the above lines for other task details -->
+
+            <button type="submit">Create Task</button>
+            <button type="button" class="cancel-button" onclick="closeCreateTaskForm()">Cancel</button>
+        </form>
+    </div>
+
+<script>
+    function completeRow(rowId) {
+        alert("Row " + rowId + " completed!");
+        // You can add logic to perform specific actions for the completed row
+    }
+
+    function showCreateTaskForm() {
+        document.getElementById('create-task-form').style.display = 'block';
+        document.querySelector('.overlay').style.display = 'block';
+    }
+
+    function closeCreateTaskForm() {
+        document.getElementById('create-task-form').style.display = 'none';
+        document.querySelector('.overlay').style.display = 'none';
+    }
+
+    // Add the following event listener to close the form when clicking outside
+    document.querySelector('.overlay').addEventListener('click', function (event) {
+        if (event.target === document.querySelector('.overlay')) {
+            closeCreateTaskForm();
+        }
+    });
+</script>
+</body>
+</html>    <!-- Add any additional content as needed -->
+

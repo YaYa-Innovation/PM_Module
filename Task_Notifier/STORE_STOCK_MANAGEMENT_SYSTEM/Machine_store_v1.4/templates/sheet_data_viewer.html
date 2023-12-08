@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #sheetsViewer {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #addTaskModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #addTaskModal h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #addTaskModal label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #addTaskModal input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        #addTaskModal button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #addTaskModal button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList {
+            margin-top: 20px;
+        }
+
+        #sheetsList h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        #sheetsList button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #sheetsList button:hover {
+            background-color: #45a049;
+        }
+
+        #sheetsList p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        th {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#spare_id').on('input', function () {
+            var spareId = $(this).val();
+            var spareNameInput = $('#spare_name');
+
+            // Make an AJAX request to fetch the spare name
+            $.ajax({
+                url: '/get_spare_name/' + '{{ file_name }}' + '/' + spareId,
+                method: 'GET',
+                success: function (data) {
+                    if (data.success) {
+                        spareNameInput.val(data.spare_name);
+                    } else {
+                        spareNameInput.val('');  // Clear the input if spare ID is not found
+                    }
+                },
+                error: function () {
+                    spareNameInput.val('');  // Handle errors by clearing the input
+                }
+            });
+        });
+    });
+</script>
+</head>
+<body>
+
+ <div id="sheetsViewer">
+    <h1>Sheet Data Viewer - {{ file_name }} - {{ sheet_name }}</h1>
+
+    {% if sheet_name == "All Stock" or sheet_name == "History" %}
+        <!-- Display sheet data here without buttons -->
+        {% if headers and data %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for header in headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            {% for key, value in row.items() %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No data found for the selected sheet.</p>
+        {% endif %}
+    {% else %}
+        <!-- Button to toggle the Add Task modal -->
+        <button onclick="toggleAddTaskModal()">Add Task</button>
+
+        <!-- Add Task modal -->
+        <div id="addTaskModal">
+            <h2>Add Task</h2>
+        <form action="{{ url_for('add_data', file_name=file_name, sheet_name=sheet_name) }}" method="post">
+            <label for="spare_name">Spare Name:</label>
+            <!-- Add a new attribute data-spare-id to store the spare ID -->
+            <input type="text" id="spare_name" name="spare_name" required data-spare-id>
+            <br>
+            <label for="spare_id">Spare ID:</label>
+            <!-- Add an oninput event to trigger the AJAX request -->
+            <input type="text" id="spare_id" name="spare_id" required oninput="fetchSpareName(this)">
+            <br>
+            <label for="qty">Quantity:</label>
+            <input type="number" id="qty" name="qty" required>
+            <br>
+            <label for="purpose">Purpose:</label>
+            <input type="text" id="purpose" name="purpose" required>
+            <br>
+            <button type="submit">Add Task</button>
+        </form>
+            {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
+
+        <!-- Display sheet data here with Complete button -->
+        {% if headers and data %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for header in headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            {% for key, value in row.items() %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                            <td>
+<button onclick="completeTask('{{ file_name }}', '{{ sheet_name }}', '{{ loop.index }}', '{{ row['Spare Name'] }}', '{{ row['Spare ID'] }}', '{{ row['Qty'] }}', '{{ row['Booking'] }}', '{{ row['Purpose'] }}')">Complete</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No data found for the selected sheet.</p>
+        {% endif %}
+    {% endif %}
+</div>
+
+<script>
+    function toggleAddTaskModal() {
+        const addTaskModal = document.getElementById('addTaskModal');
+        addTaskModal.style.display = addTaskModal.style.display === 'none' ? 'block' : 'none';
+    }
+
+
+
+function completeTask(file_name, sheet_name, machine_number, spare_name, spare_id, qty, booking, purpose) {
+        // You can implement logic to handle the "Complete" button click
+        // For example, you can make an AJAX request to mark the task as complete
+        alert(`Complete task for Machine Number ${machine_number}`);
+        
+        // Now, you can use the values passed to perform any necessary actions
+        // For example, you can make an AJAX request to update the task status to "completed"
+        // and move the task details to the 'History' sheet.
+
+        // Here, you might want to use a library like Axios or the Fetch API for making AJAX requests.
+        // The following example is a simplified illustration.
+        fetch(`/complete_task/${file_name}/${sheet_name}/${machine_number}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                spare_name: spare_name,
+                spare_id: spare_id,
+                qty: qty,
+                booking: booking,
+                purpose: purpose,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response from the server
+            if (data.success) {
+                // Task completed successfully, you can perform additional actions if needed
+                console.log('Task completed successfully');
+            } else {
+                // Handle the case where completing the task failed
+                console.error(`Error completing task: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error completing task:', error);
+        });
+    }
+</script>
+
+
+
+
+</body>
+</html>

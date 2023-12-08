@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 20px auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Task</h1>
+    <h2>File: {{ filename }}</h2>
+    <h3>Sheet: {{ sheet_name }}</h3>
+
+    <form action="{{ url_for('create_task', filename=filename, sheet_name=sheet_name) }}" method="post">
+        <!-- Add your form elements here -->
+        <label for="machine_name">Machine Name:</label>
+        <input type="text" id="machine_name" name="machine_name" required>
+
+        <label for="machine_part">Machine Part:</label>
+        <input type="text" id="machine_part" name="machine_part" required>
+
+        <!-- Add more form fields as needed -->
+
+        <button type="submit">Create Task</button>
+    </form>
+</body>
+</html>

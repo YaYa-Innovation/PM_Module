@@ -1,0 +1,64 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Stock Management</h1>
+    
+    <button id="addButton" onclick="toggleForm()">Add</button>
+
+    <div class="overlay" id="overlay"></div>
+
+    <div id="createForm" style="display:none;">
+        <form action="/create_excel" method="post">
+            <label for="file_name">Enter Excel File Name:</label>
+            <input type="text" id="file_name" name="file_name" required>
+            <button type="submit">Create Excel</button>
+        </form>
+    </div>
+
+    {{% if created_file_path %}}
+        <div class="success-message">
+            <p>File created at: {{ created_file_path }}</p>
+        </div>
+    {{% endif %}}
+
+    <h2>Existing Excel Files:</h2>
+    {% for file in excel_files %}
+        <form action="/download/{{ file }}" method="get" style="display:inline;">
+            <button type="submit">{{ file }}</button>
+        </form>
+    {% endfor %}
+
+    <script>
+        function toggleForm() {
+            var form = document.getElementById("createForm");
+            var overlay = document.getElementById("overlay");
+
+            if (form.style.display === 'none' || form.style.display === '') {
+                form.style.display = 'block';
+                overlay.classList.add('active');
+            } else {
+                form.style.display = 'none';
+                overlay.classList.remove('active');
+            }
+        }
+
+        // Close the form when clicking outside of it
+        document.addEventListener('click', function(event) {
+            var form = document.getElementById("createForm");
+            var addButton = document.getElementById("addButton");
+
+            if (event.target !== form && event.target !== addButton) {
+                form.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Create Spare - {{ file_name }}</title>
+</head>
+<body>
+    <h1>Create Spare in {{ file_name }}</h1>
+    <form method="post" action="{{ url_for('create_spare', file_name=file_name) }}">
+        <!-- Your form fields go here -->
+        <button type="submit">Create Spare</button>
+    </form>
+</body>
+</html>
