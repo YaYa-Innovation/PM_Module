@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Excel File</title>
+    <style>
+        /* Your existing styles go here */
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .form-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .file-list {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .file-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 8px 12px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .file-button:hover {
+            background-color: #2980b9;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Entry Application</h1>
+
+    <button onclick="showForm()">Create New Excel File</button>
+
+    <div class="overlay" onclick="closeForm()"></div>
+
+    <div class="form-container" id="create-file-form">
+        <h2>Create New Excel File</h2>
+        <form action="{{ url_for('create_excel') }}" method="post">
+            <label for="excel_name">Enter Excel File Name:</label>
+            <input type="text" id="excel_name" name="excel_name" required>
+            <button type="submit">Create Excel File</button>
+        </form>
+    </div>
+
+    <div class="file-list">
+        {% for file in file_list %}
+            <a href="{{ url_for('view_excel', filename=file) }}">
+                <button class="file-button">{{ file }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <script>
+        function showForm() {
+            document.getElementById('create-file-form').style.display = 'flex';
+            document.querySelector('.overlay').style.display = 'block';
+        }
+
+        function closeForm() {
+            document.getElementById('create-file-form').style.display = 'none';
+            document.querySelector('.overlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

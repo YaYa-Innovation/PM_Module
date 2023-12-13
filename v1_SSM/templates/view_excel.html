@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Excel File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .form-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        label, input {
+            display: block;
+            margin-bottom: 8px;
+            width: calc(100% - 16px);
+            box-sizing: border-box;
+        }
+
+        input {
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .cancel-button {
+            background-color: #e74c3c;
+            margin-left: 10px;
+        }
+
+        .cancel-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Additional styles for the Create New Sheet button and form */
+        .create-sheet-button, .create-spare-button {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .create-sheet-button:hover, .create-spare-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>View Excel File</h1>
+    <h2>File: {{ filename }}</h2>
+
+    <!-- Display buttons for existing sheets (modify based on your needs) -->
+    <div>
+        <h3>Sheets:</h3>
+        {% for sheet_name in sheet_names %}
+            <a href="{{ url_for('view_sheet', filename=filename, sheet_name=sheet_name) }}">
+                <button class="sheet-button">{{ sheet_name }}</button>
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Button to create a new sheet -->
+    <button class="create-sheet-button" onclick="showCreateSheetForm()">Create New Sheet</button>
+    <button class="create-spare-button" onclick="showCreateSpareForm()">Create New Spare</button>
+
+    <!-- Form to create a new sheet -->
+    <div class="overlay" id="create-sheet-overlay" onclick="closeCreateSheetForm()"></div>
+    <div class="form-container" id="create-sheet-form">
+        <h2>Create New Sheet</h2>
+        <form action="{{ url_for('create_sheet', filename=filename) }}" method="post">
+            <label for="sheet_name">Enter Sheet Name:</label>
+            <input type="text" id="sheet_name" name="sheet_name" required>
+            <button type="submit">Create Sheet</button>
+            <button type="button" class="cancel-button" onclick="closeCreateSheetForm()">Cancel</button>
+        </form>
+    </div>
+
+    <!-- Form to create a new spare -->
+<div class="overlay" id="create-spare-overlay" onclick="closeCreateSpareForm()"></div>
+<div class="form-container" id="create-spare-form">
+    <h2>Create New Spare</h2>
+    <form action="{{ url_for('create_spare', filename=filename, sheet_name='all_spare') }}" method="post">
+        <label for="spare_id">Spare ID:</label>
+        <input type="text" id="spare_id" name="spare_id" required oninput="getSpareName(this.value, '{{ filename }}')">
+
+        <label for="spare_name">Spare Name:</label>
+        <input type="text" id="spare_name" name="spare_name" required>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+
+        <label for="purpose">Purpose:</label>
+        <input type="text" id="purpose" name="purpose" required>
+
+        <button type="submit">Create Spare</button>
+        <button type="button" class="cancel-button" onclick="closeCreateSpareForm()">Cancel</button>
+    </form>
+</div>
+
+<script>
+    function showCreateSheetForm() {
+        document.getElementById('create-sheet-form').style.display = 'block';
+        document.getElementById('create-sheet-overlay').style.display = 'block';
+    }
+
+    function closeCreateSheetForm() {
+        document.getElementById('create-sheet-form').style.display = 'none';
+        document.getElementById('create-sheet-overlay').style.display = 'none';
+    }
+
+
+   function showCreateSpareForm() {
+        document.getElementById('create-spare-form').style.display = 'block';
+        document.getElementById('create-spare-overlay').style.display = 'block';
+    }
+
+    function closeCreateSpareForm() {
+        document.getElementById('create-spare-form').style.display = 'none';
+        document.getElementById('create-spare-overlay').style.display = 'none';
+    }
+
+    function getSpareName(spareId, filename) {
+        // Make an asynchronous request to fetch spare name based on spare ID
+        fetch(`/get_spare_name/${filename}/${spareId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('spare_name').value = data.spare_name;
+                } else {
+                    document.getElementById('spare_name').value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>
